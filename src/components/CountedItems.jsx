@@ -1,32 +1,31 @@
 import React from "react";
 import { List } from "./List";
 import { TextContent } from "./TextContent";
+import { Button } from "./Button";
+import { reducer, initialState } from "./reducer";
 
 export const CountedItems = () => {
-  const [items, setItems] = React.useState([]);
-  const [count, setCount] = React.useState(0);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  const addItemClick = () => {
-    setItems([...items, count]);
-    setCount(count + 1);
-  };
+  const addItemClick = React.useCallback(() => {
+    dispatch({ type: "addItem" });
+  }, []);
 
-  const deleteItemClick = () => {
-    setItems(items.slice(0, items.length - 1));
-    setCount(count - 1);
-  };
+  const deleteItemClick = React.useCallback(() => {
+    dispatch({ type: "deleteItem" });
+  }, []);
 
   return (
     <>
-      <button onClick={addItemClick}>Add item</button>
-      <button onClick={deleteItemClick}>Delete item</button>
+      <Button text="Add item" onClick={addItemClick} />
+      <Button text="Delete item" onClick={deleteItemClick} />
 
       <TextContent
         style={{ fontWeight: "bold" }}
-        text={`Current count: ${count}`}
+        text={`Current count: ${state.count}`}
       />
 
-      <List items={items} />
+      <List items={state.items} />
     </>
   );
 };
